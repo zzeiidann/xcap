@@ -1,0 +1,58 @@
+Nama Bank,Provinsi,Kabupaten/Kota,Jenis,Latitude,Longitude,in_indonesia,in_indonesia_buffered,is_on_land
+PT BD. BALI RESPATI,Provinsi Jawa Barat,Kab. Bekasi,Konvensional,-7.4088844,106.0390434,False,False,False
+PD. BPR Cirebon Barat,Provinsi Jawa Barat,Kab. Cirebon,Konvensional,-6.7202121,108.5672905,True,True,False
+PD. BPR Cirebon Utara,Provinsi Jawa Barat,Kab. Cirebon,Konvensional,-6.7202121,108.5672905,True,True,False
+PERUMDA BPR Bank Cirebon,Provinsi Jawa Barat,Kota Cirebon,Konvensional,-6.7203017,108.5673143,True,True,False
+PT Bank Perekonomian Rakyat BKK Demak Perseroda,Provinsi Jawa Tengah,Kab. Demak,Konvensional,-6.9228905,110.4599962,True,True,False
+Koperasi Bank Perekonomian Rakyat Wedariyaksa,Provinsi Jawa Tengah,Kab. Pati,Konvensional,-6.8226384,110.4602544,False,True,False
+PT BPR Bank Jepara Artha (Perseroda),Provinsi Jawa Tengah,Kab. Jepara,Konvensional,-6.6555822,110.626173,False,True,False
+PT. BPR Nusamba Pecangaan Jepara,Provinsi Jawa Tengah,Kab. Jepara,Konvensional,-6.7016665,110.590661,False,True,False
+PT Bank Perekonomian Rakyat Mitra Abadi Sejahtera,Provinsi Jawa Tengah,Kab. Cilacap,Konvensional,-4.3032575,108.0595701,False,False,False
+PT Bank Perekonomian Rakyat Dian Binarta,Provinsi Bengkulu,Kab. Bengkulu Utara,Konvensional,-3.3178402,101.5836582,False,False,False
+PT Bank Perekonomian Rakyat Mukomuko Makmur,Provinsi Bengkulu,Kab. Mukomuko,Konvensional,-2.7714356,101.1341113,False,False,False
+PT BANK PEREKONOMIAN RAKYAT NUSANTARA BONA PASOGIT DUA PULUH,Provinsi Sumatera Utara,Kab. Deli Serdang,Konvensional,-1.2771515,97.3830704,False,False,False
+PT Bank Perekonomian Rakyat Nusantara Bona Pasogit Tujuh Belas,Provinsi Sumatera Utara,Kab. Deli Serdang,Konvensional,-1.2771515,97.4356112,False,False,False
+PT BPR Nusantara Bona Pasogit 13,Provinsi Sumatera Utara,Kab. Langkat,Konvensional,-1.3179028,97.8854407,False,False,False
+PT Bank Perekonomian Rakyat Nusantara Bona Pasogit Enam,Provinsi Sumatera Utara,Kab. Simalungun,Konvensional,-1.523973,97.4861463,False,False,False
+PT Bank Perekonomian Rakyat Nusantara Bona Pasogit Tujuh,Provinsi Sumatera Utara,Kab. Simalungun,Konvensional,-1.523973,97.4396866,False,False,False
+PT Bank Perekonomian Rakyat Nusantara Bona Pasogit Delapan,Provinsi Sumatera Utara,Kab. Dairi,Konvensional,-1.7275255,97.2887469,False,False,False
+PT. BPR Nusantara Bona Pasogit 5,Provinsi Sumatera Utara,Kab. Toba Samosir,Konvensional,-1.6221913,97.4861512,False,False,False
+PT BANK PEREKONOMIAN RAKYAT NUSANTARA BONA PASOGIT DUA PULUH DUA,Provinsi Sumatera Utara,Kota Binjai,Konvensional,-1.3282004,97.4559099,False,False,False
+PT BANK PEREKONOMIAN RAKYAT GANTO NAGARI SEMBILAN BELAS LIMA EMPAT,Provinsi Sumatera Barat,Kab. Padang Pariaman,Konvensional,-0.6695762,100.1109399,False,True,False
+PT Bank Perekonomian Rakyat Pembangunan Kabupaten Padang Pariaman,Provinsi Sumatera Barat,Kab. Padang Pariaman,Konvensional,-0.5750217,100.0609771,False,True,False
+PT Bank Perekonomian Rakyat Gema Pesisir,Provinsi Sumatera Barat,Kab. Pesisir Selatan,Konvensional,-1.9811004,100.8399424,False,True,False
+PT Bank Perekonomian Rakyat Lengayang,Provinsi Sumatera Barat,Kab. Pesisir Selatan,Konvensional,-1.5227229,100.4777396,False,True,False
+BPR LPN Tapan,Provinsi Sumatera Barat,Kab. Pesisir Selatan,Konvensional,-1.6068279,100.36531,False,False,False
+PT Bank Perekonomian Rakyat Batang Kapas,Provinsi Sumatera Barat,Kab. Pesisir Selatan,Konvensional,-1.345943,100.4732556,False,True,False
+PT Bank Perekonomian Rakyat Pagai Utara Selatan,Provinsi Sumatera Barat,Kab. Kepulauan Mentawai,Konvensional,-2.4146029,99.5653475,False,False,False
+PT BPR Budisetia,Provinsi Sumatera Barat,Kota Padang,Konvensional,-0.7053351,99.9014789,False,False,False
+PT Bank Perekonomian Rakyat Sentral Mitra Sejahtera,Provinsi Kep. Bangka Belitung,Kab. Bangka,Konvensional,-1.8483451,106.1180813,False,False,False
+Perumda BPR Bintan,Provinsi Kep. Riau,Kab. Bintan (d/h Kab. Kepulauan Riau),Konvensional,0.9597278,104.2527093,False,False,False
+PT. BPR Mitra Niaga Banggai,Provinsi Sulawesi Tengah,Kab. Parimo/Banggai,Konvensional,-0.8288268,121.706037,False,True,False
+PT. BPR Dana Niaga Mandiri,Provinsi Sulawesi Selatan,Kab. Maros,Konvensional,-4.964379,119.3899682,False,True,False
+PT Bank Perekonomian Rakyat Gerbang Masa Depan,Provinsi Sulawesi Selatan,Kab. Takalar,Konvensional,-5.2779401,119.2385226,False,False,False
+PT Bank Perekonomian Rakyat Prisma Dana,Provinsi Sulawesi Utara,Kota Manado,Konvensional,-2.2912284,105.2167757,False,True,False
+PT Bank Perekonomian Rakyat Bahteramas Buton Utara (Perseroda),Provinsi Sulawesi Tenggara,Kab. Buton,Konvensional,-4.9129564,122.2495905,False,False,False
+PT. BPR Bahteramas Kolaka Utara (Perseroda),Provinsi Sulawesi Tenggara,Kab. Kolaka Utara,Konvensional,-3.7824883,120.9237149,False,True,False
+PD BPR NTB Sumbawa,Provinsi Nusa Tenggara Barat,Kab. Sumbawa,Konvensional,-8.5482416,116.8111729,False,False,False
+PT. BANK PEREKONOMIAN RAKYAT PESISIR AKBAR,Provinsi Nusa Tenggara Barat,Kab. Bima,Konvensional,-8.4878001,118.6721655,True,True,False
+PT Bank Perekonomian Rakyat Desa Sangeh,Provinsi Bali,Kab. Badung,Konvensional,-8.602921,115.0332141,False,True,False
+PT Bank Perekonomian Rakyat Sinar Kuta,Provinsi Bali,Kab. Badung,Konvensional,-8.6749466,115.0956307,False,True,False
+PT Bank Perekonomian Rakyat Sinar Kuta Mulia,Provinsi Bali,Kab. Badung,Konvensional,-8.7001376,115.129677,False,True,False
+PT Bank Perekonomian Rakyat Tulus,Provinsi Bali,Kab. Badung,Konvensional,-8.6351703,115.0303815,False,True,False
+PT Bank Perekonomian Rakyat Permata Sedana,Provinsi Bali,Kab. Badung,Konvensional,-8.7056351,115.0943324,False,True,False
+PT Bank Perekonomian Rakyat Cahaya Binawerdi,Provinsi Bali,Kab. Badung,Konvensional,-8.6296762,114.9403193,False,True,False
+PT Bank Perekonomian Rakyat Saptacristy Utama,Provinsi Bali,Kab. Badung,Konvensional,-8.6619004,115.1065933,False,True,False
+PT BPR KS Bali Agung Sedana,Provinsi Bali,Kab. Badung,Konvensional,-8.6857477,115.0983628,False,True,False
+PT Bank Perekonomian Rakyat Megah Raharja Berdaya,Provinsi Bali,Kab. Badung,Konvensional,-8.5447669,114.8378722,True,True,False
+PT Bank Perekonomian Rakyat Kita,Provinsi Bali,Kab. Badung,Konvensional,-8.6855916,115.1065933,False,True,False
+PT BPR DEWI LESTARI INSANDANA,Provinsi Maluku Utara,Kab./Kota Lainnya - Provinsi Maluku Utara,Konvensional,0.7322956,127.3376689,False,True,False
+PT BPR PRAMITA MITRA DANA,Provinsi Maluku Utara,Kab./Kota Lainnya - Provinsi Maluku Utara,Konvensional,0.0891784,124.3273837,False,False,False
+PT Bank Perekonomian Rakyat Global Nusantara,Provinsi Maluku Utara,Kota Ternate,Konvensional,0.7912242,127.3825185,False,True,False
+PT Bank Perekonomian Rakyat Bobato Lestari,Provinsi Maluku Utara,Kota Ternate,Konvensional,0.7388788,127.3351655,False,True,False
+PT. BPR Modern Express Maluku Utara,Provinsi Maluku Utara,Kota Ternate,Konvensional,-1.5179761,124.4174734,False,False,False
+PT Bank Perekonomian Rakyat Syariah Mandiri Mitra Sukses,Provinsi Jawa Timur,Kab. Gresik,Syariah,-6.5369191,111.953116,False,False,False
+PT Bank Perekonomian Rakyat Syariah Harta Insan Karimah Fajar Nitro,Provinsi Sulawesi Selatan,Kota Makassar,Syariah,-5.6617963,107.7793588,False,False,False
+PT. BANK PEREKONOMIAN RAKYAT SYARIAH PNM PATUH BERAMAL AMALI,Provinsi Nusa Tenggara Barat,Kota Mataram,Syariah,-6.4705502,115.4932074,False,False,False
+PT Bank Perekonomian Rakyat Syariah Bahari Berkesan,Provinsi Maluku Utara,Kota Ternate,Syariah,0.7903467,127.3878576,False,True,False
+PT Bank Perekonomian Rakyat Syariah Bobato Lestari,Provinsi Maluku Utara,Kota Tidore Kepulauan,Syariah,0.673036,127.4524747,False,True,False
