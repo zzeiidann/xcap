@@ -279,7 +279,7 @@ Ablations:
 4. previous layer plus validated coordinate-spatial features; and
 5. previous layer plus point-in-time regional variables when sourced.
 
-Evaluate ROC-AUC, PR-AUC, KS, recall, precision, Brier score, calibration intercept/slope and plots, event rate and lift by decile, and top-10%/top-20% capture. Report annual metrics and their dispersion, not only a pooled score. Bootstrap uncertainty by bank rather than individual row.
+Use out-of-time KS as the primary model-selection metric because the operational question is how well the score separates deteriorating from non-deteriorating banks across the ranked portfolio. Evaluate ROC-AUC and PR-AUC as secondary diagnostics alongside recall, precision, Brier score, calibration intercept/slope and plots, event rate and lift by decile, and top-10%/top-20% capture. Report annual metrics and their dispersion, not only a pooled score. Bootstrap uncertainty by bank rather than individual row.
 
 Risk bands should be selected from training-fold operational capacity and observed deterioration rates—for example, review-capacity cutoffs for the top risk population—then frozen for the next validation year. Report migration matrices and realized rates by band. Do not assign arbitrary probability cutoffs such as 0.25/0.50/0.75.
 

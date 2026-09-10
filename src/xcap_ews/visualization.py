@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -79,11 +80,11 @@ def plot_target_stability(target_profile: pd.DataFrame, path: Path) -> None:
 
 
 def plot_ablation(summary: pd.DataFrame, path: Path) -> None:
-    chart = summary.pivot(index="feature_set", columns="model", values="pr_auc")
+    chart = summary.pivot(index="feature_set", columns="model", values="ks")
     chart = chart.reindex([name for name in ["financial", "financial_trend", "financial_trend_peer", "financial_trend_peer_spatial"] if name in chart.index])
     fig, ax = plt.subplots(figsize=(11, 5.5))
     chart.plot(kind="bar", ax=ax, color=[TIKET["blue"], TIKET["yellow"]], width=0.72)
-    ax.set(title="Do peer and spatial layers improve early warning?", xlabel="Feature layer", ylabel="Mean out-of-time PR-AUC (2019–2023)")
+    ax.set(title="Do peer and spatial layers improve early warning?", xlabel="Feature layer", ylabel="Mean out-of-time KS (2019–2023)")
     ax.tick_params(axis="x", rotation=18)
     ax.legend(title="Model")
     _save(fig, path)
@@ -94,8 +95,8 @@ def plot_metric_stability(metrics: pd.DataFrame, feature_set: str, model: str, p
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.5))
     for ax, metric, label, color in zip(
         axes,
-        ["roc_auc", "pr_auc", "brier"],
-        ["ROC-AUC", "PR-AUC", "Brier score (lower is better)"],
+        ["ks", "lift_at_20pct", "brier"],
+        ["KS statistic", "Lift in top 20%", "Brier score (lower is better)"],
         [TIKET["blue"], TIKET["yellow"], TIKET["coral"]],
     ):
         ax.plot(selected["validation_target_year"], selected[metric], marker="o", linewidth=2.5, color=color)
@@ -151,10 +152,10 @@ def plot_risk_bands(risk_table: pd.DataFrame, path: Path) -> None:
 
 
 def plot_feature_importance(importance: pd.DataFrame, path: Path, top_n: int = 15) -> None:
-    selected = importance.nlargest(top_n, "pr_auc_importance_mean").sort_values("pr_auc_importance_mean")
+    selected = importance.nlargest(top_n, "ks_importance_mean").sort_values("ks_importance_mean")
     fig, ax = plt.subplots(figsize=(9, 6.5))
-    ax.barh(selected["feature"], selected["pr_auc_importance_mean"], xerr=selected["pr_auc_importance_std"], color=TIKET["blue"], ecolor=TIKET["yellow"], capsize=3)
-    ax.set(title="What drives out-of-time discrimination?", xlabel="Decrease in holdout PR-AUC after permutation", ylabel="")
+    ax.barh(selected["feature"], selected["ks_importance_mean"], xerr=selected["ks_importance_std"], color=TIKET["blue"], ecolor=TIKET["yellow"], capsize=3)
+    ax.set(title="What drives out-of-time rank separation?", xlabel="Decrease in holdout KS after permutation", ylabel="")
     _save(fig, path)
 
 
@@ -186,14 +187,151 @@ def plot_peer_comparison(risk_table: pd.DataFrame, path: Path) -> None:
     _save(fig, path)
 
 
-def plot_spatial_risk(risk_table: pd.DataFrame, path: Path) -> None:
+def _draw_indonesia(
+    ax: plt.Axes, boundary_path: Path, facecolor: str = "#EEF8FF"
+) -> None:
+    """Draw an Indonesia GeoJSON boundary without a heavyweight GIS dependency."""
+    boundary = json.loads(boundary_path.read_text(encoding="utf-8"))
+    for feature in boundary["features"]:
+        geometry = feature["geometry"]
+        polygons = geometry["coordinates"] if geometry["type"] == "MultiPolygon" else [geometry["coordinates"]]
+        for polygon in polygons:
+            exterior = np.asarray(polygon[0])
+            ax.fill(
+                exterior[:, 0],
+                exterior[:, 1],
+                facecolor=facecolor,
+                edgecolor=TIKET["deep_blue"],
+                linewidth=0.45,
+                alpha=0.95,
+                zorder=1,
+            )
+
+
+def _label_major_islands(ax: plt.Axes) -> None:
+    labels = {
+        "SUMATRA": (101.0, 0.3),
+        "JAWA": (110.0, -7.4),
+        "KALIMANTAN": (114.0, 0.6),
+        "SULAWESI": (121.0, -1.4),
+        "PAPUA": (136.3, -4.0),
+    }
+    for label, (longitude, latitude) in labels.items():
+        ax.text(
+            longitude,
+            latitude,
+            label,
+            color=TIKET["muted"],
+            fontsize=8,
+            fontweight="bold",
+            alpha=0.55,
+            ha="center",
+            zorder=2,
+        )
+
+
+def plot_spatial_risk(
+    risk_table: pd.DataFrame, figure_path: Path, boundary_path: Path
+) -> None:
     cmap = LinearSegmentedColormap.from_list("tiket_risk", [TIKET["sky"], TIKET["blue"], TIKET["yellow"], TIKET["coral"]])
-    fig, ax = plt.subplots(figsize=(12, 5.8))
-    points = ax.scatter(risk_table["Longitude"], risk_table["Latitude"], c=risk_table["predicted_deterioration_probability"], cmap=cmap, s=20, alpha=0.82, linewidths=0)
-    ax.set(title="Geographic distribution of predicted deterioration risk", xlabel="Longitude", ylabel="Latitude")
-    ax.grid(alpha=0.3)
+    fig, ax = plt.subplots(figsize=(14, 6.2))
+    ax.set_facecolor("#DDF3FF")
+    _draw_indonesia(ax, boundary_path)
+    _label_major_islands(ax)
+    points = ax.scatter(
+        risk_table["Longitude"],
+        risk_table["Latitude"],
+        c=risk_table["predicted_deterioration_probability"],
+        cmap=cmap,
+        s=24,
+        alpha=0.88,
+        edgecolors="white",
+        linewidths=0.18,
+        zorder=3,
+    )
+    high_risk = risk_table.loc[risk_table["risk_band"].eq("High Risk")]
+    ax.scatter(
+        high_risk["Longitude"],
+        high_risk["Latitude"],
+        facecolors="none",
+        edgecolors=TIKET["coral"],
+        linewidths=0.8,
+        s=52,
+        zorder=4,
+        label="High Risk (top 5%)",
+    )
+    ax.set(
+        title="Where are the banks with elevated deterioration risk?",
+        xlabel="Longitude",
+        ylabel="Latitude",
+        xlim=(94, 142),
+        ylim=(-11.5, 6.5),
+        aspect="equal",
+    )
+    ax.grid(color="white", alpha=0.65)
+    ax.legend(loc="lower left")
     fig.colorbar(points, ax=ax, label="Predicted deterioration probability")
-    _save(fig, path)
+    ax.text(
+        0.995,
+        0.01,
+        "Boundary: geoBoundaries gbOpen IDN ADM0 (ODbL 1.0)",
+        transform=ax.transAxes,
+        ha="right",
+        va="bottom",
+        fontsize=7,
+        color=TIKET["muted"],
+    )
+    _save(fig, figure_path)
+
+
+def plot_spatial_peer_context(
+    risk_table: pd.DataFrame, figure_path: Path, boundary_path: Path
+) -> None:
+    """Map whether each bank's NPL is above or below nearby-bank conditions."""
+    mapped = risk_table.dropna(subset=["NPL_Neto", "spatial_npl_net_mean"]).copy()
+    mapped["npl_gap"] = mapped["NPL_Neto"] - mapped["spatial_npl_net_mean"]
+    bound = float(np.nanpercentile(np.abs(mapped["npl_gap"]), 95))
+    cmap = LinearSegmentedColormap.from_list(
+        "tiket_peer_gap", [TIKET["blue"], "#FFFFFF", TIKET["yellow"], TIKET["coral"]]
+    )
+    fig, ax = plt.subplots(figsize=(14, 6.2))
+    ax.set_facecolor("#DDF3FF")
+    _draw_indonesia(ax, boundary_path)
+    _label_major_islands(ax)
+    points = ax.scatter(
+        mapped["Longitude"],
+        mapped["Latitude"],
+        c=mapped["npl_gap"].clip(-bound, bound),
+        cmap=cmap,
+        vmin=-bound,
+        vmax=bound,
+        s=23,
+        alpha=0.88,
+        edgecolors="white",
+        linewidths=0.15,
+        zorder=3,
+    )
+    ax.set(
+        title="Is asset-quality pressure isolated or shared with nearby banks?",
+        xlabel="Longitude",
+        ylabel="Latitude",
+        xlim=(94, 142),
+        ylim=(-11.5, 6.5),
+        aspect="equal",
+    )
+    ax.grid(color="white", alpha=0.65)
+    fig.colorbar(points, ax=ax, label="Bank NPL net minus 8-neighbor mean (percentage points)")
+    ax.text(
+        0.995,
+        0.01,
+        "Blue = below nearby peers · Yellow/coral = above nearby peers",
+        transform=ax.transAxes,
+        ha="right",
+        va="bottom",
+        fontsize=8,
+        color=TIKET["navy"],
+    )
+    _save(fig, figure_path)
 
 
 def plot_historical_trends(panel: pd.DataFrame, risk_table: pd.DataFrame, path: Path) -> None:

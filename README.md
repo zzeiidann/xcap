@@ -7,7 +7,7 @@
 
 An out-of-time banking-risk study using scraped OJK financial statements for Indonesian conventional BPRs.
 
-![Model ablation](outputs/figures/ablation_pr_auc.png)
+![Model ablation](outputs/figures/ablation_ks.png)
 
 </div>
 
@@ -26,14 +26,17 @@ The repository does **not** contain verified default, liquidation, license-revoc
 | Development/model-selection period | Target years 2019–2023 |
 | Locked final holdout | Target year 2024 |
 | Champion | Histogram gradient boosting |
-| Champion inputs | Bank financial condition + temporal trends |
-| 2024 ROC-AUC | **0.670** |
-| 2024 PR-AUC | **0.500** |
-| 2024 Brier score | **0.198** |
+| Primary selection metric | Mean out-of-time KS |
+| Champion inputs | Bank financial condition + temporal trends + administrative peers |
+| 2024 KS statistic | **0.267** |
+| 2024 top-20% lift | **1.624×** |
+| Secondary: 2024 PR-AUC | 0.503 |
+| Secondary: 2024 ROC-AUC | 0.678 |
+| Calibration: 2024 Brier score | 0.197 |
 | 2023 NPL-net Moran's I | **0.058** |
 | Moran permutation p-value | **0.001** |
 
-Financial trends improve early-warning performance. Geographic dependence is statistically detectable but weak: adding administrative peer and coordinate-spatial features does not improve development-period PR-AUC over the financial-plus-trend champion. Spatial context is therefore retained for monitoring and explanation rather than forced into the production score.
+Financial trends materially improve separation between deteriorating and non-deteriorating banks. Administrative peer features provide a small additional development-period KS gain and enter the champion. Geographic dependence is statistically detectable but weak: coordinate-spatial features reduce development-period KS and are therefore retained as monitoring context rather than forced into the production score.
 
 ## Monitoring views
 
@@ -44,6 +47,12 @@ Financial trends improve early-warning performance. Geographic dependence is sta
 | Financial deterioration paths | Geographic risk context |
 |---|---|
 | ![Risk-band trends](outputs/figures/risk_band_financial_trends.png) | ![Spatial risk](outputs/figures/latest_spatial_risk_map.png) |
+
+### Spatial peer context
+
+![NPL pressure relative to nearby banks](outputs/figures/latest_spatial_peer_context.png)
+
+The basemap uses the simplified Indonesia ADM0 boundary from geoBoundaries gbOpen. Blue points indicate NPL net below the eight-neighbor mean; yellow and coral identify banks whose asset-quality pressure exceeds nearby peers.
 
 Additional monitoring artifacts cover target stability, calibration, risk deciles, risk migration, review-capacity bands, global importance, local peer comparison, and province-level context. All figures use a tiket.com-inspired blue/yellow visual system with coral reserved for high-risk signals.
 
@@ -109,14 +118,15 @@ Random cross-validation is not used. Every fold trains on earlier target years a
 | 5 | 2016–2022 | 2023 | Final development fold |
 | Final | 2016–2023 | 2024 | Locked holdout |
 
-Model selection uses mean development-period PR-AUC. The 2024 outcome is used only after the champion model and feature layer are chosen.
+Model selection uses mean development-period **KS statistic**, a standard rank-separation measure in banking risk. The 2024 outcome is used only after the champion model and feature layer are chosen. ROC-AUC and PR-AUC remain secondary diagnostics rather than champion-selection criteria.
 
 ## Risk-oriented evaluation
 
 The experiment reports:
 
-- ROC-AUC and PR-AUC;
-- KS statistic;
+- KS statistic as the primary separation metric;
+- top-20% lift, recall, and precision as operational review metrics;
+- ROC-AUC and PR-AUC as secondary discrimination diagnostics;
 - Brier score and calibration curve;
 - recall and precision in the top 20% review population;
 - top-20% lift;
@@ -137,7 +147,7 @@ These are prioritization bands, not supervisory grades.
 
 ## Explainability
 
-Global importance is calculated by holdout permutation using PR-AUC. Bank-level explanations use median-replacement perturbations against the training population: a positive contribution means the observed feature raises predicted deterioration probability relative to its training median.
+Global importance is calculated by holdout permutation using the decrease in KS. Bank-level explanations use median-replacement perturbations against the training population: a positive contribution means the observed feature raises predicted deterioration probability relative to its training median.
 
 The final risk table combines:
 
@@ -154,6 +164,7 @@ The final risk table combines:
 ```text
 xcap/
 ├── Client-BPRSK/                  # Legacy notebooks and retained scraped data
+├── data/external/                 # Versioned Indonesia boundary and attribution
 ├── docs/
 │   └── data_audit_and_modeling_plan.md
 ├── notebooks/
