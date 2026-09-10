@@ -1,0 +1,19 @@
+{
+  "random_seed": 42,
+  "champion_selection_period": "target years 2019-2023",
+  "champion_selection_metric": "mean PR-AUC",
+  "champion_model": "hist_gbm",
+  "champion_feature_set": "financial_trend",
+  "final_holdout_target_year": 2024,
+  "final_holdout_pr_auc": 0.49999920695089994,
+  "final_holdout_roc_auc": 0.6703428115865,
+  "final_holdout_brier": 0.1980415777527262,
+  "risk_band_capacity_assumption": {
+    "High Risk": "top 5%",
+    "Watchlist": "next 15%",
+    "Moderate Risk": "next 30%",
+    "Low Risk": "bottom 50%"
+  },
+  "regional_features": "not available; intentionally omitted",
+  "target_semantics": "next-year multi-indicator deterioration proxy; not default probability"
+}
