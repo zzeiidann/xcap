@@ -20,7 +20,12 @@ from xcap_ews.config import (
     TREND_FEATURES,
 )
 from xcap_ews.data import add_ratio_quality_flags, harmonize_2024_monetary_units, load_bpr_panel, validate_panel
-from xcap_ews.evaluation import decile_table, logistic_pipeline, walk_forward_validate
+from xcap_ews.evaluation import (
+    decile_table,
+    ks_statistic,
+    logistic_pipeline,
+    walk_forward_validate,
+)
 from xcap_ews.explain import local_median_replacement_contributions
 from xcap_ews.features import build_feature_panel
 from xcap_ews.spatial import knn_weights, morans_i_permutation_test
@@ -37,6 +42,7 @@ from xcap_ews.visualization import (
     plot_peer_comparison,
     plot_province_risk,
     plot_risk_bands,
+    plot_spatial_peer_context,
     plot_spatial_risk,
     plot_target_stability,
     set_tiket_style,
@@ -126,12 +132,12 @@ def run(repo_root: Path) -> None:
         development.groupby(["feature_set", "model"], as_index=False)
         [["roc_auc", "pr_auc", "ks", "brier", "recall_at_20pct", "precision_at_20pct", "lift_at_20pct"]]
         .mean()
-        .sort_values("pr_auc", ascending=False)
+        .sort_values("ks", ascending=False)
     )
     summary.to_csv(output_dir / "ablation_summary_development.csv", index=False)
-    plot_ablation(summary, figure_dir / "ablation_pr_auc.png")
+    plot_ablation(summary, figure_dir / "ablation_ks.png")
 
-    # Champion is chosen on 2019-2023 mean PR-AUC only; 2024 is the locked final assessment.
+    # Champion is chosen on 2019-2023 mean KS only; 2024 is the locked final assessment.
     champion_row = summary.iloc[0]
     champion_feature_set = str(champion_row["feature_set"])
     champion_model_name = str(champion_row["model"])
@@ -195,7 +201,13 @@ def run(repo_root: Path) -> None:
     risk_table.to_csv(output_dir / "latest_bank_risk_table.csv", index=False)
     plot_risk_bands(risk_table, figure_dir / "latest_risk_band_distribution.png")
     plot_peer_comparison(risk_table, figure_dir / "latest_peer_comparison.png")
-    plot_spatial_risk(risk_table, figure_dir / "latest_spatial_risk_map.png")
+    boundary_path = repo_root / "data" / "external" / "indonesia_adm0.geojson"
+    plot_spatial_risk(
+        risk_table, figure_dir / "latest_spatial_risk_map.png", boundary_path
+    )
+    plot_spatial_peer_context(
+        risk_table, figure_dir / "latest_spatial_peer_context.png", boundary_path
+    )
     plot_historical_trends(panel, risk_table, figure_dir / "risk_band_financial_trends.png")
     plot_province_risk(risk_table, figure_dir / "latest_province_risk.png")
 
@@ -204,19 +216,23 @@ def run(repo_root: Path) -> None:
         final_model = model_definitions()[champion_model_name]
         pre_final = labeled.loc[labeled["target_year"].lt(2024)]
         final_model.fit(pre_final[champion_features], pre_final["next_period_deterioration"])
+        def ks_scorer(estimator: object, features: pd.DataFrame, target: pd.Series) -> float:
+            probability = estimator.predict_proba(features)[:, 1]
+            return ks_statistic(target.to_numpy(), probability)
+
         importance = permutation_importance(
             final_model,
             final_rows[champion_features],
             final_rows["next_period_deterioration"],
-            scoring="average_precision",
+            scoring=ks_scorer,
             n_repeats=15,
             random_state=RANDOM_SEED,
         )
         importance_frame = pd.DataFrame({
             "feature": champion_features,
-            "pr_auc_importance_mean": importance.importances_mean,
-            "pr_auc_importance_std": importance.importances_std,
-        }).sort_values("pr_auc_importance_mean", ascending=False)
+            "ks_importance_mean": importance.importances_mean,
+            "ks_importance_std": importance.importances_std,
+        }).sort_values("ks_importance_mean", ascending=False)
         importance_frame.to_csv(
             output_dir / "final_holdout_permutation_importance.csv", index=False
         )
@@ -245,10 +261,11 @@ def run(repo_root: Path) -> None:
     metadata = {
         "random_seed": RANDOM_SEED,
         "champion_selection_period": "target years 2019-2023",
-        "champion_selection_metric": "mean PR-AUC",
+        "champion_selection_metric": "mean KS statistic",
         "champion_model": champion_model_name,
         "champion_feature_set": champion_feature_set,
         "final_holdout_target_year": 2024,
+        "final_holdout_ks": float(final_metric["ks"]),
         "final_holdout_pr_auc": float(final_metric["pr_auc"]),
         "final_holdout_roc_auc": float(final_metric["roc_auc"]),
         "final_holdout_brier": float(final_metric["brier"]),
